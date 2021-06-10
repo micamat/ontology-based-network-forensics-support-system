@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri id="Imports Wizard Entry" name="https://github.com/micamat/network-forensics-ontology/blob/main/network_forensics_instance.owl" uri="network_forensics_instance.owl"/>
+    <uri id="Imports Wizard Entry" name="https://github.com/micamat/network-forensics-ontology/blob/main/forensics.owl" uri="forensics.owl"/>
+    <uri id="Imports Wizard Entry" name="https://github.com/micamat/network-forensics-ontology/blob/main/network.owl" uri="network.owl"/>
+    <uri id="Imports Wizard Entry" name="urn:absolute:/home/milica/Documents/icist-projekat/projekat/network_forensics_instance.owl" uri="network_forensics_instance.owl"/>
+    <uri id="Imports Wizard Entry" name="urn:absolute:/home/milica/Documents/icist-projekat/projekat/network.owl" uri="network.owl"/>
+    <uri id="Imports Wizard Entry" name="urn:absolute:/home/milica/Documents/icist-projekat/projekat/forensics.owl" uri="forensics.owl"/>
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1621178334247" name="http://lesfleursdunormal.fr/static/_downloads/bacteria.owl" uri="bacteria.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1621178334247" name="https://raw.githubusercontent.com/micamat/network-forensics-ontology/main/forensics.owl" uri="forensics.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1621178334247" name="https://raw.githubusercontent.com/micamat/network-forensics-ontology/main/network.owl" uri="network.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1621178334247" name="https://raw.githubusercontent.com/micamat/network-forensics-ontology/main/network_forensics.owl" uri="network_forensics.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1621178334247" name="https://raw.githubusercontent.com/micamat/network-forensics-ontology/main/network_forensics_instance.owl" uri="network_forensics_instance.owl"/>
+    </group>
+</catalog>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="sr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="SSL/TLS demonstration - master thesis">
+		<meta name="author" content="Milica Matijevic">
+		
+		<script src="static/js/jquery-3.2.1.js"></script>
+		<script src="static/js/bootstrap.js"></script>
+		
+		<link href="static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="static/css/animate.min.css" rel="stylesheet">
+		<link href="static/css/w3.css" rel="stylesheet">
+		<link href="static/css/w3-theme-black.css" rel="stylesheet">
+		<link href="static/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+		
+		
+		<style>
+			body {
+				background-color: #347B98;
+			}
+			
+			ul {
+				list-style-type: none;
+			}
+			
+			.choose-btn {
+				width: 60%;
+				height: 40%;
+				color: #F7F0D4;
+				font-size: 26pt;
+				font-weight: bold;
+				background-color: transparent;
+				padding: 5px 5px;
+			}
+			
+			.choose-btn:hover {
+				background-color: #C21460;
+			}
+			
+			.center-block {
+				display: block;
+				margin: auto;
+			}
+			
+			footer {
+				position: fixed;
+				left: 0;
+				bottom: 0;
+				width: 100%;
+			}
+			
+			.instanceSlide {
+				display: none;
+			}
+			
+			.instance-btn {
+				background-color: #092834;
+				color: white;
+				font-weight: bold;
+				margin: 7px;
+			}
+			
+			.header {
+				padding: 5px;
+				text-align: center;
+				font-size: 15px;
+				font-weight: bold;
+				background-color: #092834;	
+				color: #F7F0D4;	
+			}
+
+			#ontology-table {
+				display: none;
+			}
+
+			#classes-td {
+				width: 400px;
+				height: 650px;
+				overflow: scroll;
+			}
+
+			#instances-td, #edit-td {
+				width: 1200px;
+				overflow: scroll;
+			}
+
+			#instances-td {
+				height: 350px;
+			}
+
+			#edit-td {
+				height: 300px;
+			}
+
+			.class-label {
+				font-weight: bold;
+			}
+
+			#menu-table {
+				margin-left: 115px;
+			}
+
+			#edit-table td {
+				padding: 5px;
+			}
+			
+		</style>
+		
+	</head>
+	<body>
+		<header class="header">
+			<div>
+				<h4>Support System for Digital Evidence Admissibility</h4>
+				<h1>NETWORK FORENSICS</h1>
+			</div>
+			<p id="profile" class="instance-btn w3-button w3-round" style="padding: 10px; background-color: #C21460; position: absolute; top: 5%; right: 5%; visibility: hidden; font-weight: bold;"></p>
+		</header>
+		
+		<div class="w3-center" style="padding-top: 10px;">
+			<i id="fingerprint-img" class="fas fa-fingerprint fa-7x" style="color: #F7F0D4;"></i>
+			<p id="instruction" style="font-size: 26pt; color: #F7F0D4;">Pick up your role</p>
+			<span id="menu" style="display: none;">
+				<button class="w3-button w3-round instance-btn" style="background-color: #C21460;">Add concept</button>
+				<button class="w3-button w3-round instance-btn" style="background-color: #C21460;">Modify concept</button>
+				<button class="w3-button w3-round instance-btn" style="background-color: #C21460;">Remove concept</button>
+				<button class="w3-button w3-round instance-btn" style="background-color: #C21460;">View instances</button>
+			</span>
+			
+			<div class="w3-row center-block" style="width: 60%; padding-top: 20px;" id="start-buttons">
+				<div class="w3-half w3-container">
+					<button id='investigator-btn' class="choose-btn w3-round-xxlarge center-block">Investigator</button>
+				</div>
+				<div class="w3-half w3-container">
+					<button id='expert-btn' class="choose-btn w3-round-xxlarge center-block">Expert</button>
+				</div>
+			</div>
+			
+			<!-- <div class="w3-content w3-display-container" id="slides" style="max-width:800px; display: none; height: 400px; margin-top: 20px;">
+				<div id="layer" class="instanceSlide">
+					<ul>
+						<li><button class="w3-button w3-round instance-btn">Digital evidence source</li>
+						<li><button class="w3-button w3-round instance-btn">Evidence admissibility requirement</li>
+						<li><button class="w3-button w3-round instance-btn">Forensics soundness criterion</li>
+						<li><button class="w3-button w3-round instance-btn">Investigation method</li>
+						<li><button class="w3-button w3-round instance-btn">Investigation phase</li>
+						<li><button class="w3-button w3-round instance-btn">Tool</li>
+					</ul>
+				</div>
+				
+				<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+				<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+			</div> -->
+		</div>
+
+		<div id="ontology-table">
+			<table id='menu-table'>
+				<tr>
+					<td><button class='w3-button w3-round instance-btn' id='add-subclass-btn' style='background-color: rgb(194, 20, 96);'>Add<br>subclass</button></td>
+					<td><button class='w3-button w3-round instance-btn' id='modify-class-btn' style='background-color: rgb(194, 20, 96);'>Modify<br>class</button></td>
+					<td><button class='w3-button w3-round instance-btn' id='delete-class-btn' style='background-color: rgb(194, 20, 96);'>Delete<br>class</button></td>
+					<td><button class='w3-button w3-round instance-btn' id='view-subclasses-and-instances-btn' style='background-color: rgb(194, 20, 96);'>View subclasses<br>and instances</button></td>
+					<td><button class='w3-button w3-round instance-btn' id='add-instance-btn' style='background-color: rgb(194, 20, 96);'>Add<br>instance</button></td>
+					<td><button class='w3-button w3-round instance-btn' id='define-btn' style='background-color: rgb(194, 20, 96);'>Define<br>class</button></td>
+				</tr>
+			</table>
+			<table border="2" align="center">
+				<tr>
+					<td><button class="w3-button w3-round" style='background-color: rgb(194, 20, 96); color: white;' id="angle-left-button"><i class="fas fa-angle-left"></i></button>&nbsp;&nbsp;&nbsp;Subclasses of <span class="class-label">owl.Thing</span></td>
+					<td>&nbsp;&nbsp;&nbsp;Instances of <span class="class-label">owl.Thing</span></td>
+				</tr>
+				<tr>
+					<td rowspan="2">
+						<div id="classes-td"></div>
+					</td>
+					<td>
+						<div id="instances-td"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="edit-td">
+							<div id="edit-relations" style="display: none">
+								
+							</div>
+							<table id="edit-table" style="display: none">
+								<tr>
+									<td colspan="2" id="add-subclass-td"></td>
+								</tr>
+								<tr>
+									<td id='name-label'>Subclass name:</td>
+									<td><input id="subclass-name" type="text"/></td>
+								</tr>
+								<tr>
+									<td id="comment-label">Subclass comment:</td>
+									<td><input id="subclass-comment" type="text"/></td>
+								</tr>
+								<tr>
+									<td>
+										<button class="w3-button w3-round" id="add-subclass-apply-btn" style='background-color: rgb(194, 20, 96); color: white;'>Apply</button>
+										<button class="w3-button w3-round" id="modify-subclass-apply-btn" style='background-color: rgb(194, 20, 96); color: white; display: none;'>Modify</button>
+										<button class="w3-button w3-round" id="add-instance-apply-btn" style='background-color: rgb(194, 20, 96); color: white; display: none;'>Add</button>
+									</td>
+								</tr>
+							</table>
+							<table id="define-table" style="display: none;">
+								<tr>
+									<td style="padding: 10px;">
+										<div id="relations-td"></div>
+									</td>
+									<td style="margin-left: 25px;">
+										<div id="relations-subclasses-td"></div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<hr>
+										<button class="w3-button w3-round" id="add-definition-btn" style='background-color: rgb(194, 20, 96); color: white;'>Add definition</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<footer class="w3-container w3-center" style="background-color: #092834; color: #F7F0D4;">
+			<p>Powered by Digital Forensics Lab, Faculty of Technical Sciences, Novi Sad</p>
+		</footer>
+		
+		<script>
+		
+			var slideIdx = 1;
+			var toolAndLayerPrefs = [];
+			//showDivs(slideIdx);
+			var currentClass;
+			var definitionClass;
+
+			var rootClasses = {};
+			
+			/*function plusDivs(n){
+				showDivs(slideIdx += n);
+				if(slideIdx == 3){
+					/*$.ajax({
+						url: '/postToolAndLayer',
+						type: 'POST',
+						dataType: 'json',
+						contentType: 'application/json',
+						data: JSON.stringify(toolAndLayerPrefs),
+						success: function(response){
+							response.forEach(function(entry){
+								$("#steps").append("<p class='instance-btn'>" + entry + "</p>")
+							});
+						},
+						error: function(error){
+							console.log(error)
+						}
+					});
+					//$("#steps").append("<p class='instance-btn'>Be aware of that a SPANned port copies only valid Ethernet packets, does not duplicate all error information.</p><p class='instance-btn'>Using SPAN may increase dropped Ethernet frames.</p><p class='instance-btn'>Limit the invasiveness of evidence collection by recording only header information.</p>");
+					$("#steps").append("<p class='instance-btn'>Duplication of the single event within different log files must be reduced.</p><p class='instance-btn'>Events from log files must be aggregated.</p><p class='instance-btn'>Events from log files must be correlated.</p><p class='instance-btn'>Formats of collected log files must be unified.</p>");
+					$("#sound").append("<p class='instance-btn'>You considered errors and disadvantages of the tool used</p>");
+				}
+			}
+			
+			function showDivs(n) {
+				var i;
+				var x = $(".instanceSlide");
+				if (n > x.length) {
+					slideIdx = 1;
+				}
+				if (n < 1) {
+					slideIdx = x.length;
+				}
+				for (i=0; i < x.length; i++){
+					x[i].style.display = "none";
+				}
+				x[slideIdx - 1].style.display = "block";
+			}*/
+			
+			$("#add-definition-btn").click(function(){
+				$.ajax({
+					url: "/addDefinition",
+					type: 'POST',
+					contentType: "application/json",
+					data: JSON.stringify({
+						"currentClass": currentClass,
+						"definitionClass": definitionClass
+					}),
+					success: function(data){
+						alert("Definition is created.")
+					},
+					error: function(){
+
+					}
+				})
+			})
+
+			$("#define-btn").click(function(){
+				$("#edit-relations").css("display", "block");
+				$("#edit-table").css("display", "none");
+				$.ajax({
+					url: "getRelations",
+					type: 'POST',
+					contentType: "application/json",
+					data: JSON.stringify({
+						"key": currentClass
+					}),
+					success: function(data){
+						relations = JSON.parse(data)
+						$("#edit-table").css("display", "none")
+						$("#define-table").css("display", "block")
+						$("#relations-td").empty()
+						Object.entries(relations).forEach(([key, value]) => {
+							$("#relations-td").append(`<div><button onclick="definitionClassClicked('${key}')" id='relations-${key}-btn' class='instance-btn w3-button w3-round'>${value[0]}</button></div>`)
+						})
+					},
+					error: function(){
+
+					}
+				})
+			});
+
+			function definitionClassClicked(key){
+				definitionClass = key;
+				$("#relations-" + key + "-btn").css("background-color", "rgb(239, 239, 239)")
+				$("#relations-" + key + "-btn").css("color", "black")
+				for(var i=0; i<$("#relations-td div button").length; i++){
+					if($("#relations-td div button")[i].id != `relations-${key}-btn`){
+						$("#" + $("#relations-td div button")[i].id).css("background-color", "#092834");
+						$("#" + $("#relations-td div button")[i].id).css("color", "white");
+					}
+				}
+			}
+
+			function subclassesForDefinition(key){
+				$("#relations-" + key + "-btn").css("background-color", "rgb(239, 239, 239)")
+				$("#relations-" + key + "-btn").css("color", "black")
+				$.ajax({
+					url: '/getSubclasses',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({"key": key}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#relations-subclasses-td").empty();
+						for(var key in subclasses){
+							$("#relations-subclasses-td").append(`<p><button onclick="subclassesForDefinition('${key}')" class='instance-btn w3-button w3-round' id='relations-${key}-btn'>${subclasses[key][0]}</button></p>`);
+						}
+					},
+					error: function(){
+
+					}
+				});
+			}
+
+			$("#add-subclass-btn").click(function(){
+				$("#edit-table").css("display", "block");
+				$("#add-subclass-td").text(currentClass); 
+				$("#modify-subclass-apply-btn").css("display", "none")
+				$("#define-table").css("display", "none")
+				$("#add-subclass-apply-btn").css("display", "inline")
+				$("#subclass-name").val("")
+				$("#subclass-comment").val("")
+			});
+
+			$("#add-instance-btn").click(function(){
+				$("#edit-table").css("display", "block");
+				$("#add-subclass-td").text(currentClass);
+				$("#add-subclass-apply-btn").css("display", "none")
+				$("#modify-subclass-apply-btn").css("display", "none")
+				$("#define-table").css("display", "none")
+				$("#add-instance-apply-btn").css("display", "inline")
+				$("#name-label").text("Instance name:")
+				$("#comment-label").text("Instance comment:")
+				$("#subclass-name").val("")
+				$("#subclass-comment").val("")
+			});
+
+			$("#delete-class-btn").click(function(){
+				$.ajax({
+					url: "/deleteClass",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({"key": currentClass}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#classes-td").empty();
+						for(var key in subclasses){
+							$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + subclasses[key][0] + "</button></p>");
+						}
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			$("#modify-class-btn").click(function(){
+				$.ajax({
+					url: "/getClass/" + currentClass,
+					type: "GET",
+					contentType: "application/json",
+					success: function(data){
+						modify = JSON.parse(data)
+						$("#subclass-name").val(currentClass)
+						$("#subclass-comment").val(modify[currentClass][0])
+						$("#edit-table").css("display", "block")
+						$("#add-subclass-apply-btn").css("display", "none")
+						$("#add-subclass-td").css("display", "none")
+						$("#define-table").css("display", "none")
+						$("#modify-subclass-apply-btn").css("display", "inline")
+						$("#subclass-name").css("pointer-events", "none")
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			$("#modify-subclass-apply-btn").click(function(){
+				$.ajax({
+					url: "/modifyClass",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify({
+						"key": currentClass,
+						"name": $("#subclass-name").val(),
+						"comment": $("#subclass-comment").val()
+					}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#classes-td").empty();
+						for(var key in subclasses){
+							$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + subclasses[key][0] + "</button></p>");
+						}
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			$("#add-subclass-apply-btn").click(function(){
+				$.ajax({
+					url: "/addSubclass",
+					type: 'POST',
+					contentType: "application/json",
+					data: JSON.stringify({
+						"key": currentClass,
+						"name": $("#subclass-name").val(),
+						"comment": $("#subclass-comment").val()
+					}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#classes-td").empty();
+						for(var key in subclasses){
+							$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + subclasses[key][0] + "</button></p>");
+						}
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			$("#add-instance-apply-btn").click(function(){
+				$.ajax({
+					url: "/addInstance",
+					type: 'POST',
+					contentType: "application/json",
+					data: JSON.stringify({
+						"key": currentClass,
+						"name": $("#subclass-name").val(),
+						"comment": $("#subclass-comment").val()
+					}),
+					success: function(data){
+						instances = JSON.parse(data)
+						$("#instances-td").empty();
+						for(var key in instances){
+							$("#instances-td").append("<p><button class='instance-btn w3-button w3-round' id='" + key + "'>" + instances[key][0] + "</button></p>");
+						}
+					}
+				});
+			})
+
+			$("#angle-left-button").click(function(){
+				$.ajax({
+					url: '/getForensicsAndNetworkRootClasses',
+					type: 'GET',
+					success: function(data){
+						$(".class-label").text("")
+						superclasses = JSON.parse(data);
+						$("#classes-td").empty();
+						for(var key in superclasses){
+							$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + superclasses[key][0] + "</button></p>");
+						}
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+			function instanceClicked(button){
+				toolAndLayerPrefs.push(button.id);
+				$("#" + button.id).css("background-color", "gray");
+				console.log(toolAndLayerPrefs)
+			}
+		
+			$(document).ready(function(){
+				$('#investigator-btn').click(function(){
+					
+					/*$.ajax({
+						url: '/getLayerInstances',
+						type: 'GET',
+						success: function(data) {
+							$("#start-buttons").css("display", "none");
+							$("body").css("background-color", "#F7F0D4");
+							$("#fingerprint-img").css("color", "#C21460");	
+							$("#fingerprint-img").css("font-size", "32px");
+							$("#profile").text("Investigator");
+							$("#profile").css("visibility", "visible");
+							//$("#instruction").text("Choose your preferences");
+							//$("#instruction").css("color", "#C21460");\
+							$("#instruction").css("display", "none");
+							$("#slides").css("display", "block");
+							//$("#menu").css("display", "block");
+							
+							var list = JSON.parse(data);
+							list.forEach(function(entry) { 
+								//$("#layer").append("<button onClick='instanceClicked(" + entry + ")' class='w3-button w3-round instance-btn' id='" + entry + "'>" + entry + "</button>");
+							});
+							
+							$.ajax({
+								url: "/getToolInstances",
+								type: "GET",
+								success: function(data){
+									var list = JSON.parse(data);
+									$("#slides").append("<div id='tool' class='instanceSlide'></div><div id='steps' class='instanceSlide'></div><div id='sound' class='instanceSlide'></div>");
+									list.forEach(function(entry) {
+										$("#tool").append("<button onClick='instanceClicked(" + entry + ")' class='w3-button w3-round instance-btn' id='" + entry + "'>" + entry + "</button>");
+									});
+								},
+								error: function(error){
+									console.log(error);
+								}
+							});
+						},
+						error: function(error){
+							console.log(error);
+						}
+					});*/
+				});
+				
+				$('#expert-btn').click(function(){
+					$.ajax({
+						url: '/getForensicsAndNetworkRootClasses',
+						type: 'GET',
+						success: function(data){
+							$("#start-buttons").css("display", "none");
+							$("body").css("background-color", "#F7F0D4");
+							$("#fingerprint-img").css("color", "#C21460");	
+							$("#fingerprint-img").css("font-size", "32px");
+							$("#profile").text("Expert");
+							$("#profile").css("visibility", "visible");
+							$("#instruction").css("display", "none");
+							$("#ontology-table").css("display", "block");
+							rootClasses = JSON.parse(data);
+							for(var key in rootClasses){
+								$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + rootClasses[key][0] + "</button></p>")
+							}
+						},
+						error: function(error){
+							console.log(error)
+						}
+					});
+				});
+			});
+
+			function classClicked(key){
+				$('#' + key).css("background-color", "rgb(239, 239, 239)");
+				$('#' + key).css("color", "black");
+				currentClass = key;
+				for(var i=0; i<$("#classes-td p button").length; i++){
+					if($("#classes-td p button")[i].id != key){
+						$("#" + $("#classes-td p button")[i].id).css("background-color", "#092834");
+						$("#" + $("#classes-td p button")[i].id).css("color", "white");
+					}
+				}
+			}
+
+			$("#view-subclasses-and-instances-btn").click(function(){
+				$(".class-label").text(currentClass);
+				$.ajax({
+					url: '/getSubclasses',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({"key": currentClass}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#classes-td").empty();
+						for(var key in subclasses){
+							$("#classes-td").append("<p><button onclick=\"classClicked('" + key + "')\" class='instance-btn w3-button w3-round' id='" + key + "'>" + subclasses[key][0] + "</button></p>");
+						}
+					},
+					error: function(){
+
+					}
+				});
+				$.ajax({
+					url: "/getInstances",
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({"key": currentClass}),
+					success: function(data){
+						instances = JSON.parse(data)
+						$("#instances-td").empty();
+						for(var key in instances){
+							$("#instances-td").append("<p><button class='instance-btn w3-button w3-round' id='" + key + "'>" + instances[key][0] + "</button></p>");
+						}		
+					},
+					error: function(){
+
+					}
+				});
+				$.ajax({
+					url: '/getSubclasses',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({"key": definitionClass}),
+					success: function(data){
+						subclasses = JSON.parse(data);
+						$("#relations-subclasses-td").empty();
+						for(var key in subclasses){
+							$("#relations-subclasses-td").append(`<p><button onclick="definitionClassClicked('${key}')" class='instance-btn w3-button w3-round' id='relations-${key}-btn'>${subclasses[key][0]}</button></p>`);
+						}
+					},
+					error: function(){
+
+					}
+				});
+			});
+
+		</script>
+		
+	</body>
+</html>
